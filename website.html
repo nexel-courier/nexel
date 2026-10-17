@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXEL Courier Co. - Logistics & Management Portal</title>
+    <link rel="stylesheet" href="website.css">
+    <script src="website.js" defer></script>
+</head>
+<body>
+
+    <!-- 1. UNIFIED LOGIN SCREEN -->
+    <div id="login-screen" class="app-screen active-screen">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-logo-wrapper">
+                    <img src="logo.png" alt="NEXEL Courier Co. Logo" id="login-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'240\' height=\'80\'><rect width=\'240\' height=\'80\' fill=\'%23E5242A\'/><text x=\'20\' y=\'50\' fill=\'%23FFFFFF\' font-family=\'Arial\' font-weight=\'bold\' font-size=\'32\'>NEXEL</text></svg>';">
+                </div>
+                <h2>Secure Portal Login</h2>
+                <p class="login-subtitle">Sign in to access your dashboard, shipments & tracking</p>
+                
+                <form id="unified-login-form" onsubmit="handleUnifiedLogin(event)">
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" required placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required placeholder="Enter your password">
+                    </div>
+                    <div id="login-error" class="error-msg"></div>
+                    <button type="submit" class="btn btn-primary btn-block" style="margin-top: 15px;">Sign In to Portal</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. CUSTOMER INTERFACE -->
+    <div id="customer-screen" class="app-screen">
+        <header id="main-header">
+            <div class="nav-container">
+                <div class="logo-brand">
+                    <a href="#" class="brand-link" onclick="navigateToCustomerSection('cust-home-section')">
+                        <img src="logo.png" alt="NEXEL Courier Co." id="company-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'40\'><rect width=\'120\' height=\'40\' fill=\'%23E5242A\'/><text x=\'10\' y=\'26\' fill=\'%23FFFFFF\' font-family=\'Arial\' font-weight=\'bold\' font-size=\'18\'>NEXEL</text></svg>';">
+                        <span class="brand-title">NEXEL Courier Co.</span>
+                    </a>
+                </div>
+                <nav class="nav-menu">
+                    <a href="#" class="cust-nav-link active" data-target="cust-home-section">Home</a>
+                    <a href="#" class="cust-nav-link" data-target="cust-shipments-section">My Shipments</a>
+                    <a href="#" class="cust-nav-link" data-target="cust-track-section">Track Shipment</a>
+                    <a href="#" class="cust-nav-link" data-target="cust-services-section">Services</a>
+                    <a href="#" class="cust-nav-link" data-target="cust-about-section">About Us</a>
+                    <a href="#" class="cust-nav-link" data-target="cust-contact-section">Contact Us</a>
+                    <button class="btn btn-accent btn-sm" onclick="logout()">Logout</button>
+                </nav>
+            </div>
+        </header>
+
+        <main class="customer-main">
+            <!-- Customer Home -->
+            <section id="cust-home-section" class="cust-page-section active-cust-section">
+                <div class="hero-container">
+                    <div class="hero-content">
+                        <div class="badge-tag">Fast • Safe • Reliable</div>
+                        <h1>Fast, Safe & Reliable Courier Services</h1>
+                        <p>Welcome to <strong>NEXEL Courier Co.</strong> — your trusted partner for domestic and business logistics.</p>
+                        <div class="hero-buttons">
+                            <button class="btn btn-primary" onclick="navigateToCustomerSection('cust-track-section')">Track Shipment</button>
+                            <button class="btn btn-secondary" onclick="navigateToCustomerSection('cust-shipments-section')">View My Shipments</button>
+                        </div>
+                    </div>
+                    <div class="hero-graphic">
+                        <div class="hero-card-accent">
+                            <div class="icon-box">📦</div>
+                            <h3>Verified Delivery</h3>
+                            <p>Real-time updates and secure handling.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlights-grid" style="margin-top: 40px;">
+                    <div class="highlight-card">
+                        <div class="hl-icon">⚡</div>
+                        <h3>Express Transit</h3>
+                        <p>Priority dispatch across major domestic destinations.</p>
+                    </div>
+                    <div class="highlight-card">
+                        <div class="hl-icon">🛡️</div>
+                        <h3>Guaranteed Care</h3>
+                        <p>Strict safety measures protecting your sensitive parcels.</p>
+                    </div>
+                    <div class="highlight-card">
+                        <div class="hl-icon">📍</div>
+                        <h3>Live Tracking</h3>
+                        <p>Complete visibility from booking to doorstep delivery.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customer My Shipments -->
+            <section id="cust-shipments-section" class="cust-page-section">
+                <div class="section-header">
+                    <h2>My Assigned Shipments</h2>
+                    <p>Review all packages linked to your customer profile.</p>
+                </div>
+                <div class="table-responsive bg-cream-card">
+                    <table class="data-table" id="customer-shipments-table">
+                        <thead>
+                            <tr>
+                                <th>AWB / Tracking ID</th>
+                                <th>Carrier</th>
+                                <th>Service</th>
+                                <th>Receiver</th>
+                                <th>Destination</th>
+                                <th>City / State</th>
+                                <th>Pincode</th>
+                                <th>Date & Time</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Customer Track -->
+            <section id="cust-track-section" class="cust-page-section">
+                <div class="section-header">
+                    <h2>Track Your Parcel</h2>
+                    <p>Enter your AWB number to check current consignment status.</p>
+                </div>
+                <div class="tracking-box-container">
+                    <div class="tracking-form-group">
+                        <input type="text" id="cust-tracking-input" placeholder="Enter AWB No. (e.g. NXL-1001)...">
+                        <button class="btn btn-primary" onclick="custTrackSearch()">Track Now</button>
+                    </div>
+                    <div id="cust-tracking-result" class="tracking-result-hidden"></div>
+                </div>
+            </section>
+
+            <!-- Customer Services -->
+            <section id="cust-services-section" class="cust-page-section">
+                <div class="section-header">
+                    <h2>Our Professional Services</h2>
+                    <p>Tailored courier solutions for personal and corporate logistics.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">📄</div>
+                        <h3>Document & Doc Express</h3>
+                        <p>Secure, expedited transport for high-priority legal documents and papers.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">📦</div>
+                        <h3>Parcel & Parcel Express</h3>
+                        <p>Reliable door-to-door freight and package delivery with live tracking.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customer About Us -->
+            <section id="cust-about-section" class="cust-page-section">
+                <div class="about-container">
+                    <div class="about-text">
+                        <h2>About NEXEL Courier Co.</h2>
+                        <p>NEXEL Courier Co. provides reliable courier and logistics services for individuals and businesses.</p>
+                    </div>
+                    <div class="about-card-visual">
+                        <div class="visual-badge">Excellence in Transit</div>
+                        <p>“Your trusted logistics partner.”</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customer Contact Us -->
+            <section id="cust-contact-section" class="cust-page-section">
+                <div class="contact-container">
+                    <div class="contact-info-card">
+                        <h3>Company Information</h3>
+                        <ul class="contact-list">
+                            <li><strong>Company Name:</strong> NEXEL Courier Co.</li>
+                            <li><strong>Contact Person:</strong> Bhavesh Shah</li>
+                            <li><strong>Mobile:</strong> <a href="tel:7020392017">7020392017</a></li>
+                            <li><strong>Email:</strong> <a href="mailto:nexelcourier@gmail.com">nexelcourier@gmail.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <div class="footer-container">
+                <p>&copy; 2026 NEXEL Courier Co. All rights reserved. | Contact: Bhavesh Shah (7020392017)</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 3. ADMIN INTERFACE -->
+    <div id="admin-screen" class="app-screen">
+        <div class="admin-layout">
+            <aside class="admin-sidebar">
+                <div class="admin-brand">
+                    <h3>NEXEL Admin</h3>
+                </div>
+                <ul class="admin-nav-list">
+                    <li><a href="#" class="admin-nav-link active" data-admin-tab="admin-tab-dashboard">Dashboard</a></li>
+                    <li><a href="#" class="admin-nav-link" data-admin-tab="admin-tab-shipments">Shipments</a></li>
+                    <li><a href="#" class="admin-nav-link" data-admin-tab="admin-tab-add">Add Shipment</a></li>
+                    <li><a href="#" class="admin-nav-link" data-admin-tab="admin-tab-carriers">Courier Carriers</a></li>
+                    <li><a href="#" class="admin-nav-link" data-admin-tab="admin-tab-create-account">Create Customer Account</a></li>
+                    <li><a href="#" class="admin-nav-link" data-admin-tab="admin-tab-staff">Delivery Staff</a></li>
+                    <li><a href="#" class="admin-nav-link" data-admin-tab="admin-tab-reports">Reports</a></li>
+                    <li><a href="#" class="admin-nav-link logout-link" onclick="logout()">Logout</a></li>
+                </ul>
+            </aside>
+
+            <main class="admin-content">
+                <!-- Tab 1: Dashboard -->
+                <div id="admin-tab-dashboard" class="admin-tab-content active-admin-tab">
+                    <h2>Admin Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-box stat-red">
+                            <h3>Total Shipments</h3>
+                            <p id="stat-total">0</p>
+                        </div>
+                        <div class="stat-box stat-yellow">
+                            <h3>Pending / Booked</h3>
+                            <p id="stat-pending">0</p>
+                        </div>
+                        <div class="stat-box stat-accent">
+                            <h3>In-Transit / Out for Delivery</h3>
+                            <p id="stat-transit">0</p>
+                        </div>
+                        <div class="stat-box stat-green">
+                            <h3>Delivered</h3>
+                            <p id="stat-delivered">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: All Shipments Management -->
+                <div id="admin-tab-shipments" class="admin-tab-content">
+                    <h2>All Shipments Management</h2>
+                    <div class="table-responsive bg-cream-card">
+                        <table class="data-table" id="admin-shipments-table">
+                            <thead>
+                                <tr>
+                                    <th>AWB No.</th>
+                                    <th>Carrier</th>
+                                    <th>Service Type</th>
+                                    <th>Sender</th>
+                                    <th>Receiver</th>
+                                    <th>City / State</th>
+                                    <th>Pincode</th>
+                                    <th>Actual Wt.</th>
+                                    <th>Vol. Wt.</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Add Shipment -->
+                <div id="admin-tab-add" class="admin-tab-content">
+                    <h2 id="shipment-form-title">Add New Shipment</h2>
+                    <form id="add-shipment-form" onsubmit="handleAddShipment(event)">
+                        <input type="hidden" id="edit-shipment-awb" value="">
+                        
+                        <div class="form-section-title">1. Sender & Receiver Details</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="add-sender-name">Sender Name*</label>
+                                <input type="text" id="add-sender-name" required placeholder="Sender Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-sender-mobile">Sender Mobile*</label>
+                                <input type="tel" id="add-sender-mobile" required placeholder="Mobile Number">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="add-recv-name">Receiver Name*</label>
+                                <input type="text" id="add-recv-name" required placeholder="Receiver Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-recv-mobile">Receiver Mobile*</label>
+                                <input type="tel" id="add-recv-mobile" required placeholder="Mobile Number">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="add-dest">Destination Address*</label>
+                            <input type="text" id="add-dest" required placeholder="Street / House / Area Address">
+                        </div>
+
+                        <!-- NEW CITY, PINCODE, STATE FIELDS -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="add-city">City*</label>
+                                <input type="text" id="add-city" required placeholder="City">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-pincode">Pincode*</label>
+                                <input type="text" id="add-pincode" required placeholder="6-digit Pincode">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-state">State*</label>
+                                <input type="text" id="add-state" required placeholder="State">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="add-customer-user">Assign Customer Account*</label>
+                            <select id="add-customer-user" required></select>
+                        </div>
+
+                        <div class="form-section-title" style="margin-top: 25px;">2. Shipment & Logistics Specifications</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="add-awb">AWB No. / Tracking ID (Manual)*</label>
+                                <input type="text" id="add-awb" required placeholder="e.g. NXL-9988">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-carrier">Courier Carrier*</label>
+                                <div class="carrier-select-row">
+                                    <select id="add-carrier" required>
+                                        <option value="">-- Select Carrier --</option>
+                                        <option value="Mark Express">Mark Express</option>
+                                        <option value="Anjani Courier">Anjani Courier</option>
+                                        <option value="Nandan Courier">Nandan Courier</option>
+                                        <option value="nexel courier">nexel courier</option>
+                                        <option value="delhivery">delhivery</option>
+                                        <option value="trackon">trackon</option>
+                                        <option value="skysking">skysking</option>
+                                        <option value="fedex">fedex</option>
+                                        <option value="dhl">dhl</option>
+                                        <option value="ups">ups</option>
+                                        <option value="atlantic">atlantic</option>
+                                        <option value="professional">professional</option>
+                                        <option value="dtdc">dtdc</option>
+                                    </select>
+                                    <button type="button" class="btn btn-accent btn-sm" onclick="openNewCarrierModal()">+ New Carrier</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="add-service-type">Service Type*</label>
+                                <select id="add-service-type" required>
+                                    <option value="">-- Select Service --</option>
+                                    <option value="Document">Document</option>
+                                    <option value="Doc express">Doc express</option>
+                                    <option value="Parcel">Parcel</option>
+                                    <option value="Parcel express">Parcel express</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-datetime">Date & Time*</label>
+                                <input type="datetime-local" id="add-datetime" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Actual Weight*</label>
+                                <div class="dual-input">
+                                    <input type="number" id="add-act-weight-val" step="0.01" required placeholder="Value (e.g. 1.5)">
+                                    <select id="add-act-weight-unit" required>
+                                        <option value="kg">kg</option>
+                                        <option value="g">g</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Volumetric Weight (L x W x H / 5000)*</label>
+                                <div class="vol-inputs">
+                                    <input type="number" id="vol-length" required placeholder="L (cm)" oninput="calcVolumetricWeight()">
+                                    <input type="number" id="vol-width" required placeholder="W (cm)" oninput="calcVolumetricWeight()">
+                                    <input type="number" id="vol-height" required placeholder="H (cm)" oninput="calcVolumetricWeight()">
+                                </div>
+                                <input type="text" id="add-vol-weight" readonly placeholder="Auto (kg)" style="margin-top: 8px;" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="add-amount">Amount (₹)*</label>
+                                <input type="number" id="add-amount" step="0.01" required placeholder="Total Cost">
+                            </div>
+                            <div class="form-group">
+                                <label for="add-staff">Assigned Delivery Staff*</label>
+                                <select id="add-staff" required></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="add-photo">Shipment Photo Upload*</label>
+                            <input type="file" id="add-photo" accept="image/*" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="add-status">Initial Status*</label>
+                            <select id="add-status" required>
+                                <option value="Booked">Booked</option>
+                                <option value="In Transit">In Transit</option>
+                                <option value="Out for Delivery">Out for Delivery</option>
+                                <option value="Delivered">Delivered</option>
+                            </select>
+                        </div>
+
+                        <div id="add-shipment-msg" class="success-msg"></div>
+                        <div class="auth-buttons-row" style="margin-top: 25px;">
+                            <button type="submit" class="btn btn-primary" id="save-shipment-btn">Save Shipment</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetShipmentForm()">Clear Form</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tab 4: Courier Carriers Section -->
+                <div id="admin-tab-carriers" class="admin-tab-content">
+                    <div class="section-header-flex">
+                        <h2>Fleet Courier Companies</h2>
+                        <button class="btn btn-accent" onclick="openNewCarrierModal()">+ New Fleet Carrier</button>
+                    </div>
+                    <div class="table-responsive bg-cream-card">
+                        <table class="data-table" id="carriers-directory-table">
+                            <thead>
+                                <tr>
+                                    <th>Company Name</th>
+                                    <th>Contact Person</th>
+                                    <th>Mobile</th>
+                                    <th>Telephone</th>
+                                    <th>GSTIN</th>
+                                    <th>Email</th>
+                                    <th>Website</th>
+                                    <th>Tracking Link</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 5: Create Customer Account -->
+                <div id="admin-tab-create-account" class="admin-tab-content">
+                    <h2>Create Customer Account</h2>
+                    <form id="admin-create-account-form" onsubmit="handleAdminCreateAccount(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="acc-cname">Customer Name*</label>
+                                <input type="text" id="acc-cname" required placeholder="Full Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="acc-email">Email*</label>
+                                <input type="email" id="acc-email" required placeholder="Email Address">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="acc-mob">Mobile Number*</label>
+                                <input type="tel" id="acc-mob" required placeholder="Mobile Number">
+                            </div>
+                            <div class="form-group">
+                                <label for="acc-username">Username*</label>
+                                <input type="text" id="acc-username" required placeholder="Login Username">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="acc-pass">Password*</label>
+                                <input type="password" id="acc-pass" required placeholder="Login Password">
+                            </div>
+                            <div class="form-group">
+                                <label for="acc-address">Address*</label>
+                                <input type="text" id="acc-address" required placeholder="Customer Address">
+                            </div>
+                        </div>
+
+                        <div id="acc-create-msg"></div>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Create Customer Account</button>
+                    </form>
+
+                    <hr style="margin: 35px 0; border: 0; border-top: 2px solid var(--color-yellow);">
+
+                    <h3>Existing Customer Accounts</h3>
+                    <div class="table-responsive bg-cream-card" style="margin-top: 20px;">
+                        <table class="data-table" id="customer-accounts-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer Name</th>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>Mobile</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 6: Delivery Staff -->
+                <div id="admin-tab-staff" class="admin-tab-content">
+                    <h2>Delivery Staff Management</h2>
+                    <div class="staff-layout">
+                        <div class="staff-form-card">
+                            <h3>Add Staff</h3>
+                            <form id="add-staff-form" onsubmit="handleAddStaff(event)">
+                                <div class="form-group">
+                                    <label for="staff-name">Name*</label>
+                                    <input type="text" id="staff-name" required placeholder="Staff Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="staff-mobile">Mobile*</label>
+                                    <input type="tel" id="staff-mobile" required placeholder="Mobile Number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="staff-id">Staff ID*</label>
+                                    <input type="text" id="staff-id" required placeholder="e.g. STF-101">
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Add Staff</button>
+                            </form>
+                        </div>
+                        <div class="staff-list-card">
+                            <h3>Staff Directory</h3>
+                            <div class="table-responsive bg-cream-card">
+                                <table class="data-table" id="admin-staff-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Staff ID</th>
+                                            <th>Name</th>
+                                            <th>Mobile</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 7: Reports -->
+                <div id="admin-tab-reports" class="admin-tab-content">
+                    <h2>Reports & Analytics</h2>
+                    <div class="reports-card">
+                        <div class="reports-header-action">
+                            <h3>Operations Summary Report</h3>
+                            <button class="btn btn-secondary" onclick="window.print()">Print Report</button>
+                        </div>
+                        <div class="report-summary-box">
+                            <p><strong>Company:</strong> NEXEL Courier Co.</p>
+                            <hr style="margin: 15px 0; border: 0; border-top: 2px solid var(--color-yellow);">
+                            <ul class="report-list">
+                                <li>Total Shipments Recorded: <strong id="rep-total">0</strong></li>
+                                <li>Delivered Shipments: <strong id="rep-delivered">0</strong></li>
+                                <li>In-Transit / Out for Delivery: <strong id="rep-transit">0</strong></li>
+                                <li>Booked / Pending: <strong id="rep-pending">0</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 4. NEW FLEET CARRIER MODAL -->
+    <div id="new-carrier-modal" class="modal-overlay hidden">
+        <div class="modal-card" style="max-width: 580px;">
+            <div class="modal-header-flex">
+                <h3>New Fleet Carrier</h3>
+                <button type="button" class="close-modal-btn" onclick="closeNewCarrierModal()">&times;</button>
+            </div>
+            <form id="new-carrier-form" onsubmit="handleSaveNewCarrier(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="carr-name">Courier Company Name*</label>
+                        <input type="text" id="carr-name" required placeholder="Company Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="carr-cperson">Contact Person Name*</label>
+                        <input type="text" id="carr-cperson" required placeholder="Contact Person">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="carr-mobile">Contact Mobile*</label>
+                        <input type="tel" id="carr-mobile" required placeholder="Mobile Number">
+                    </div>
+                    <div class="form-group">
+                        <label for="carr-tele">Telephone*</label>
+                        <input type="text" id="carr-tele" required placeholder="Telephone Number">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="carr-gstin">GSTIN*</label>
+                        <input type="text" id="carr-gstin" required placeholder="GSTIN Number">
+                    </div>
+                    <div class="form-group">
+                        <label for="carr-email">Email*</label>
+                        <input type="email" id="carr-email" required placeholder="Company Email">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="carr-web">Website*</label>
+                        <input type="url" id="carr-web" required placeholder="https://example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="carr-track-link">Live Tracking Link*</label>
+                        <input type="url" id="carr-track-link" required placeholder="https://example.com/track">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="carr-address">Address*</label>
+                    <textarea id="carr-address" rows="2" required placeholder="Corporate Address"></textarea>
+                </div>
+
+                <div class="action-btn-group" style="margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeNewCarrierModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Carrier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- UPDATE STATUS & DRS MODAL -->
+    <div id="status-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>Sequential Status Update</h3>
+            <p>AWB: <strong id="modal-awb-text"></strong></p>
+            <p style="margin-top: 8px;">Current Status: <span class="status-badge" id="modal-curr-status"></span></p>
+            <p style="margin: 12px 0;">Next Step: <strong id="modal-next-status" style="color: var(--color-green);"></strong></p>
+            
+            <div id="drs-upload-container" class="hidden form-group" style="margin-top: 18px; background: #FFF3C4; padding: 15px; border-radius: 8px; border: 1px dashed var(--color-yellow);">
+                <label for="drs-photo-input"><strong>Upload DRS Photo (Compulsory for Delivery)*</strong></label>
+                <input type="file" id="drs-photo-input" accept="image/*">
+            </div>
+
+            <div class="action-btn-group" style="margin-top: 25px;">
+                <button class="btn btn-primary" onclick="confirmStatusUpdate()">Confirm Step Update</button>
+                <button class="btn btn-secondary" onclick="closeStatusModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW SHIPMENT DETAILS MODAL -->
+    <div id="details-modal" class="modal-overlay hidden">
+        <div class="modal-card" style="max-width: 600px;">
+            <h3>Shipment Full Details</h3>
+            <div id="details-modal-body" style="margin: 20px 0; max-height: 400px; overflow-y: auto;"></div>
+            <button class="btn btn-secondary" onclick="closeDetailsModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- FIREBASE SDK snippet -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBNVu3cb_eZzB9Jt8BXv3lXWtubPCayfBw",
+        authDomain: "nexel-f9910.firebaseapp.com",
+        projectId: "nexel-f9910",
+        storageBucket: "nexel-f9910.firebasestorage.app",
+        messagingSenderId: "1055930751401",
+        appId: "1:1055930751401:web:4655988b3009576accccb8",
+        measurementId: "G-595VGRL56B"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+</body>
+</html>
