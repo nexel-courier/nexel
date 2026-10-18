@@ -684,5 +684,24 @@
             <div id="invoice-printable-area"></div>
         </div>
     </div>
+
+    <!-- FIREBASE SDK Module -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBNVu3cb_eZzB9Jt8BXv3lXWtubPCayfBw",
+        authDomain: "nexel-f9910.firebaseapp.com",
+        projectId: "nexel-f9910",
+        storageBucket: "nexel-f9910.firebasestorage.app",
+        messagingSenderId: "1055930751401",
+        appId: "1:1055930751401:web:4655988b3009576accccb8",
+        measurementId: "G-595VGRL56B"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
 </body>
 </html>
